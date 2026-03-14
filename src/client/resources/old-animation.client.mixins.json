@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.old_animation.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ItemInHandRendererMixin",
+    "AbstractContainerScreenMixin",
+    "LivingEntityMixin",
+    "LocalPlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

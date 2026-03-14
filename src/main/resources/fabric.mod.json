@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "old-animation",
+  "version": "${version}",
+  "name": "Old Animation",
+  "description": "OldAnimation - 一个基于 GPL v3 协议开源的旧动画模组。注：使用代码请标注出处。",
+  "authors": [
+    "Nachoneko_miao"
+  ],
+  "contact": {
+    "homepage": "https://space.bilibili.com/3546915648047958",
+    "sources": "https://github.com/bakabaicai/Old-Animation"
+  },
+  "license": "GPL-3.0-only",
+  "icon": "assets/old-animation/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.old_animation.OldAnimation"
+    ],
+    "client": [
+      "com.old_animation.OldAnimationClient"
+    ]
+  },
+  "mixins": [
+    "old-animation.mixins.json",
+    {
+      "config": "old-animation.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
