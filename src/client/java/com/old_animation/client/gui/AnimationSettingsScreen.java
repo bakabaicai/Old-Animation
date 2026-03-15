@@ -30,28 +30,35 @@ public class AnimationSettingsScreen extends Screen {
                     cycleMode();
                     button.setMessage(Component.literal(modePrefix + getModeName()));
                     AnimationConfig.save();
-                }).bounds(centerX - 75, centerY - 100, 150, 20).build());
+                }).bounds(centerX - 75, centerY - 110, 150, 20).build());
 
-        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 75, 150, 20, Component.empty(), (AnimationConfig.offsetX + 1f) / 2f) {
+        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 85, 150, 20, Component.empty(), (AnimationConfig.offsetX + 1f) / 2f) {
             { updateMessage(); }
             @Override protected void updateMessage() { this.setMessage(Component.literal("X: " + String.format(Locale.ROOT, "%.2f", AnimationConfig.offsetX))); }
             @Override protected void applyValue() { AnimationConfig.offsetX = (float) (this.value * 2.0 - 1.0); AnimationConfig.save(); }
         });
 
-        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 50, 150, 20, Component.empty(), (AnimationConfig.offsetY + 1f) / 2f) {
+        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 60, 150, 20, Component.empty(), (AnimationConfig.offsetY + 1f) / 2f) {
             { updateMessage(); }
             @Override protected void updateMessage() { this.setMessage(Component.literal("Y: " + String.format(Locale.ROOT, "%.2f", AnimationConfig.offsetY))); }
             @Override protected void applyValue() { AnimationConfig.offsetY = (float) (this.value * 2.0 - 1.0); AnimationConfig.save(); }
         });
 
-        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 25, 150, 20, Component.empty(), (AnimationConfig.offsetZ + 1f) / 2f) {
+        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 35, 150, 20, Component.empty(), (AnimationConfig.offsetZ + 1f) / 2f) {
             { updateMessage(); }
             @Override protected void updateMessage() { this.setMessage(Component.literal("Z: " + String.format(Locale.ROOT, "%.2f", AnimationConfig.offsetZ))); }
             @Override protected void applyValue() { AnimationConfig.offsetZ = (float) (this.value * 2.0 - 1.0); AnimationConfig.save(); }
         });
 
-        String reachName = cn ? "自动格挡触发距离" : "Reach";
-        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY + 0, 150, 20, Component.empty(), (float)((AnimationConfig.range - 2.0) / 4.0)) {
+        String speedName = cn ? "动画速度" : "Animation Speed";
+        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY - 10, 150, 20, Component.empty(), AnimationConfig.animSpeed / 4.0f) {
+            { updateMessage(); }
+            @Override protected void updateMessage() { this.setMessage(Component.literal(speedName + ": " + String.format(Locale.ROOT, "%.2f", AnimationConfig.animSpeed))); }
+            @Override protected void applyValue() { AnimationConfig.animSpeed = (float) (this.value * 4.0); AnimationConfig.save(); }
+        });
+
+        String reachName = cn ? "触发距离" : "Reach";
+        this.addRenderableWidget(new AbstractSliderButton(centerX - 75, centerY + 15, 150, 20, Component.empty(), (float)((AnimationConfig.range - 2.0) / 4.0)) {
             { updateMessage(); }
             @Override protected void updateMessage() { this.setMessage(Component.literal(reachName + ": " + String.format(Locale.ROOT, "%.2f", AnimationConfig.range))); }
             @Override protected void applyValue() { AnimationConfig.range = 2.0 + (this.value * 4.0); AnimationConfig.save(); }
@@ -66,7 +73,7 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.swordBlock = !AnimationConfig.swordBlock;
                     button.setMessage(Component.literal(getToggleText(cn ? "格挡动画" : "Sword Block", AnimationConfig.swordBlock, cn)));
                     AnimationConfig.save();
-                }).bounds(sX, centerY + 25, btnW, 20).build());
+                }).bounds(sX, centerY + 40, btnW, 20).build());
 
         this.addRenderableWidget(Button.builder(
                 Component.literal(getToggleText(cn ? "使用动画" : "UseSwing", AnimationConfig.useSwing, cn)),
@@ -74,7 +81,7 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.useSwing = !AnimationConfig.useSwing;
                     button.setMessage(Component.literal(getToggleText(cn ? "使用动画" : "UseSwing", AnimationConfig.useSwing, cn)));
                     AnimationConfig.save();
-                }).bounds(sX + btnW + 2, centerY + 25, btnW, 20).build());
+                }).bounds(sX + btnW + 2, centerY + 40, btnW, 20).build());
 
         this.addRenderableWidget(Button.builder(
                 Component.literal(getToggleText(cn ? "自动格挡" : "Auto", AnimationConfig.autoMode, cn)),
@@ -82,7 +89,23 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.autoMode = !AnimationConfig.autoMode;
                     button.setMessage(Component.literal(getToggleText(cn ? "自动格挡" : "Auto", AnimationConfig.autoMode, cn)));
                     AnimationConfig.save();
-                }).bounds(sX + (btnW + 2) * 2, centerY + 25, btnW, 20).build());
+                }).bounds(sX + (btnW + 2) * 2, centerY + 40, btnW, 20).build());
+
+        this.addRenderableWidget(Button.builder(
+                Component.literal(cn ? "\u00A7c重置所有设置" : "\u00A7cReset All Settings"),
+                (button) -> {
+                    AnimationConfig.offsetX = 0.0f;
+                    AnimationConfig.offsetY = 0.0f;
+                    AnimationConfig.offsetZ = 0.0f;
+                    AnimationConfig.animSpeed = 1.0f;
+                    AnimationConfig.range = 3.0;
+                    AnimationConfig.swordBlock = false;
+                    AnimationConfig.useSwing = false;
+                    AnimationConfig.autoMode = false;
+                    AnimationConfig.animationMode = AnimationConfig.AnimMode.MODE_1_7;
+                    AnimationConfig.save();
+                    if (this.minecraft != null) this.minecraft.setScreen(new AnimationSettingsScreen(this.lastScreen));
+                }).bounds(5, this.height - 75, 90, 20).build());
 
         this.addRenderableWidget(Button.builder(
                 Component.literal(cn ? "\u00A7a作者主页" : "\u00A7aAuthor"),
@@ -105,7 +128,7 @@ public class AnimationSettingsScreen extends Screen {
         }).bounds(5, this.height - 25, 90, 20).build());
 
         this.addRenderableWidget(Button.builder(Component.literal(cn ? "完成" : "Done"), (button) -> this.onClose())
-                .bounds(centerX - 75, centerY + 55, 150, 20).build());
+                .bounds(centerX - 75, centerY + 65, 150, 20).build());
     }
 
     private String getToggleText(String prefix, boolean value, boolean isChinese) {

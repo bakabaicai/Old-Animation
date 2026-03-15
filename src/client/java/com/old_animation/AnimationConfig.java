@@ -7,10 +7,11 @@ import java.util.Properties;
 
 public class AnimationConfig {
     public static boolean autoMode = false;
-    public static boolean swordBlock = true;
-    public static boolean useSwing = true;
+    public static boolean swordBlock = false;
+    public static boolean useSwing = false;
     public static boolean isChinese = false;
     public static double range = 3.0;
+    public static float animSpeed = 1.0f;
 
     public enum AnimMode { MODE_1_7, MODE_PUSH, MODE_1_7_PLUS }
 
@@ -34,6 +35,7 @@ public class AnimationConfig {
             useSwing = Boolean.parseBoolean(prop.getProperty("useSwing", "true"));
             isChinese = Boolean.parseBoolean(prop.getProperty("isChinese", "false"));
             range = Double.parseDouble(prop.getProperty("range", "3.0"));
+            animSpeed = Float.parseFloat(prop.getProperty("animSpeed", "1.0"));
             offsetX = Float.parseFloat(prop.getProperty("offsetX", "0.0"));
             offsetY = Float.parseFloat(prop.getProperty("offsetY", "0.0"));
             offsetZ = Float.parseFloat(prop.getProperty("offsetZ", "0.0"));
@@ -55,6 +57,7 @@ public class AnimationConfig {
             prop.setProperty("useSwing", String.valueOf(useSwing));
             prop.setProperty("isChinese", String.valueOf(isChinese));
             prop.setProperty("range", String.valueOf(range));
+            prop.setProperty("animSpeed", String.valueOf(animSpeed));
             prop.setProperty("animationMode", animationMode.name());
             prop.setProperty("offsetX", String.valueOf(offsetX));
             prop.setProperty("offsetY", String.valueOf(offsetY));
