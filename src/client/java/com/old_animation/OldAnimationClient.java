@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.old_animation.client.gui.NotificationOverlay;
 import net.minecraft.network.chat.Component;
 
 public class OldAnimationClient implements ClientModInitializer {
@@ -30,6 +32,19 @@ public class OldAnimationClient implements ClientModInitializer {
                                         context.getSource().sendFeedback(Component.literal("Range set to: " + AnimationConfig.range));
                                         return 1;
                                     })))
+            );
+
+            dispatcher.register(ClientCommandManager.literal("test1")
+                    .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
+                            .executes(context -> {
+                                String text = StringArgumentType.getString(context, "text");
+                                NotificationOverlay.getInstance().show(text);
+                                return 1;
+                            }))
+                    .executes(context -> {
+                        NotificationOverlay.getInstance().show("Default Test Message");
+                        return 1;
+                    })
             );
         });
     }

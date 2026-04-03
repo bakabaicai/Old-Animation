@@ -1,9 +1,9 @@
 package com.old_animation;
 
+import com.old_animation.client.gui.NotificationOverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -67,10 +67,8 @@ public class VictoryScreenshot {
                     if (Files.exists(target)) {
                         Files.delete(source);
                         client.execute(() -> {
-                            if (client.player != null) {
-                                String msg = AnimationConfig.isChinese ? "§a[OldAnimation] 截图已保存至桌面" : "§a[OldAnimation] Screenshot saved to desktop";
-                                client.player.displayClientMessage(Component.literal(msg), false);
-                            }
+                            String msg = AnimationConfig.isChinese ? "截图已保存至桌面" : "Screenshot saved to desktop";
+                            NotificationOverlay.getInstance().show(msg, 0xFFFFFF);
                         });
                     }
                 }

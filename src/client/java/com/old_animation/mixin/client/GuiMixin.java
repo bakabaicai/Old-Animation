@@ -1,7 +1,10 @@
 package com.old_animation.mixin.client;
 
 import com.old_animation.TitleDetector;
+import com.old_animation.client.gui.NotificationOverlay;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,5 +22,10 @@ public class GuiMixin {
     @Inject(method = "setSubtitle", at = @At("HEAD"))
     private void onSetSubtitle(Component subtitle, CallbackInfo ci) {
         TitleDetector.check(null, subtitle != null ? subtitle.getString() : null);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    private void onRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        NotificationOverlay.getInstance().render(guiGraphics);
     }
 }
