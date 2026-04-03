@@ -11,6 +11,8 @@ import java.util.Locale;
 
 public class AnimationSettingsScreen extends Screen {
     private final Screen lastScreen;
+    private boolean inAnimPage = false;
+    private boolean inOtherPage = false;
 
     public AnimationSettingsScreen(Screen lastScreen) {
         super(Component.literal(AnimationConfig.isChinese ? "OldAnimation 设置" : "OldAnimation Settings"));
@@ -19,6 +21,77 @@ public class AnimationSettingsScreen extends Screen {
 
     @Override
     protected void init() {
+        this.clearWidgets();
+        if (inAnimPage) {
+            initAnimPage();
+        } else if (inOtherPage) {
+            initOtherPage();
+        } else {
+            initMainPage();
+        }
+    }
+
+    private void initMainPage() {
+        int centerX = this.width / 2;
+        int centerY = this.height / 2;
+        boolean cn = AnimationConfig.isChinese;
+
+        this.addRenderableWidget(Button.builder(
+                Component.literal(cn ? "动画设置" : "Animation Settings"),
+                (button) -> {
+                    inAnimPage = true;
+                    this.init();
+                }).bounds(centerX - 155, centerY - 20, 150, 40).build());
+
+        this.addRenderableWidget(Button.builder(
+                Component.literal(cn ? "其他功能" : "Other Features"),
+                (button) -> {
+                    inOtherPage = true;
+                    this.init();
+                }).bounds(centerX + 5, centerY - 20, 150, 40).build());
+
+        this.addRenderableWidget(Button.builder(
+                Component.literal(cn ? "\u00A7c重置所有设置" : "\u00A7cReset All Settings"),
+                (button) -> {
+                    AnimationConfig.offsetX = 0.0f;
+                    AnimationConfig.offsetY = 0.0f;
+                    AnimationConfig.offsetZ = 0.0f;
+                    AnimationConfig.animSpeed = 1.0f;
+                    AnimationConfig.range = 3.0;
+                    AnimationConfig.swordBlock = false;
+                    AnimationConfig.useSwing = false;
+                    AnimationConfig.autoMode = false;
+                    AnimationConfig.autoScreenshot = false;
+                    AnimationConfig.animationMode = AnimationConfig.AnimMode.MODE_1_7;
+                    AnimationConfig.save();
+                    if (this.minecraft != null) this.minecraft.setScreen(new AnimationSettingsScreen(this.lastScreen));
+                }).bounds(5, this.height - 75, 90, 20).build());
+
+        this.addRenderableWidget(Button.builder(
+                Component.literal(cn ? "\u00A7a作者主页" : "\u00A7aAuthor"),
+                (button) -> {
+                    if (this.minecraft != null) {
+                        String url = "https://space.bilibili.com/3546915648047958";
+                        this.minecraft.setScreen(new net.minecraft.client.gui.screens.ConfirmLinkScreen((confirmed) -> {
+                            if (confirmed) {
+                                Util.getPlatform().openUri(url);
+                            }
+                            this.minecraft.setScreen(this);
+                        }, url, true));
+                    }
+                }).bounds(5, this.height - 50, 90, 20).build());
+
+        this.addRenderableWidget(Button.builder(Component.literal(cn ? "Language: CN" : "Language: EN"), (button) -> {
+            AnimationConfig.isChinese = !AnimationConfig.isChinese;
+            AnimationConfig.save();
+            if (this.minecraft != null) this.minecraft.setScreen(new AnimationSettingsScreen(this.lastScreen));
+        }).bounds(5, this.height - 25, 90, 20).build());
+
+        this.addRenderableWidget(Button.builder(Component.literal(cn ? "完成" : "Done"), (button) -> this.onClose())
+                .bounds(centerX - 75, this.height - 28, 150, 20).build());
+    }
+
+    private void initAnimPage() {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
         boolean cn = AnimationConfig.isChinese;
@@ -91,44 +164,29 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.save();
                 }).bounds(sX + (btnW + 2) * 2, centerY + 40, btnW, 20).build());
 
+        this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
+            inAnimPage = false;
+            this.init();
+        }).bounds(centerX - 75, centerY + 65, 150, 20).build());
+    }
+
+    private void initOtherPage() {
+        int centerX = this.width / 2;
+        int centerY = this.height / 2;
+        boolean cn = AnimationConfig.isChinese;
+
         this.addRenderableWidget(Button.builder(
-                Component.literal(cn ? "\u00A7c重置所有设置" : "\u00A7cReset All Settings"),
+                Component.literal(getToggleText(cn ? "自动截图" : "Auto Screenshot", AnimationConfig.autoScreenshot, cn)),
                 (button) -> {
-                    AnimationConfig.offsetX = 0.0f;
-                    AnimationConfig.offsetY = 0.0f;
-                    AnimationConfig.offsetZ = 0.0f;
-                    AnimationConfig.animSpeed = 1.0f;
-                    AnimationConfig.range = 3.0;
-                    AnimationConfig.swordBlock = false;
-                    AnimationConfig.useSwing = false;
-                    AnimationConfig.autoMode = false;
-                    AnimationConfig.animationMode = AnimationConfig.AnimMode.MODE_1_7;
+                    AnimationConfig.autoScreenshot = !AnimationConfig.autoScreenshot;
+                    button.setMessage(Component.literal(getToggleText(cn ? "自动截图" : "Auto Screenshot", AnimationConfig.autoScreenshot, cn)));
                     AnimationConfig.save();
-                    if (this.minecraft != null) this.minecraft.setScreen(new AnimationSettingsScreen(this.lastScreen));
-                }).bounds(5, this.height - 75, 90, 20).build());
+                }).bounds(centerX - 75, centerY - 10, 150, 20).build());
 
-        this.addRenderableWidget(Button.builder(
-                Component.literal(cn ? "\u00A7a作者主页" : "\u00A7aAuthor"),
-                (button) -> {
-                    if (this.minecraft != null) {
-                        String url = "https://space.bilibili.com/3546915648047958";
-                        this.minecraft.setScreen(new net.minecraft.client.gui.screens.ConfirmLinkScreen((confirmed) -> {
-                            if (confirmed) {
-                                Util.getPlatform().openUri(url);
-                            }
-                            this.minecraft.setScreen(this);
-                        }, url, true));
-                    }
-                }).bounds(5, this.height - 50, 90, 20).build());
-
-        this.addRenderableWidget(Button.builder(Component.literal(cn ? "Language: CN" : "Language: EN"), (button) -> {
-            AnimationConfig.isChinese = !AnimationConfig.isChinese;
-            AnimationConfig.save();
-            if (this.minecraft != null) this.minecraft.setScreen(new AnimationSettingsScreen(this.lastScreen));
-        }).bounds(5, this.height - 25, 90, 20).build());
-
-        this.addRenderableWidget(Button.builder(Component.literal(cn ? "完成" : "Done"), (button) -> this.onClose())
-                .bounds(centerX - 75, centerY + 65, 150, 20).build());
+        this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
+            inOtherPage = false;
+            this.init();
+        }).bounds(centerX - 75, centerY + 65, 150, 20).build());
     }
 
     private String getToggleText(String prefix, boolean value, boolean isChinese) {

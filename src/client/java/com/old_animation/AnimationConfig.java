@@ -10,6 +10,7 @@ public class AnimationConfig {
     public static boolean swordBlock = false;
     public static boolean useSwing = false;
     public static boolean isChinese = false;
+    public static boolean autoScreenshot = false;
     public static double range = 3.0;
     public static float animSpeed = 1.0f;
 
@@ -34,6 +35,7 @@ public class AnimationConfig {
             swordBlock = Boolean.parseBoolean(prop.getProperty("swordBlock", "true"));
             useSwing = Boolean.parseBoolean(prop.getProperty("useSwing", "true"));
             isChinese = Boolean.parseBoolean(prop.getProperty("isChinese", "false"));
+            autoScreenshot = Boolean.parseBoolean(prop.getProperty("autoScreenshot", "false"));
             range = Double.parseDouble(prop.getProperty("range", "3.0"));
             animSpeed = Float.parseFloat(prop.getProperty("animSpeed", "1.0"));
             offsetX = Float.parseFloat(prop.getProperty("offsetX", "0.0"));
@@ -56,6 +58,7 @@ public class AnimationConfig {
             prop.setProperty("swordBlock", String.valueOf(swordBlock));
             prop.setProperty("useSwing", String.valueOf(useSwing));
             prop.setProperty("isChinese", String.valueOf(isChinese));
+            prop.setProperty("autoScreenshot", String.valueOf(autoScreenshot));
             prop.setProperty("range", String.valueOf(range));
             prop.setProperty("animSpeed", String.valueOf(animSpeed));
             prop.setProperty("animationMode", animationMode.name());
