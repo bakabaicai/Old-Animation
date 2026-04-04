@@ -34,6 +34,7 @@ public class VictoryScreenshot {
 
         CompletableFuture.delayedExecutor(600, TimeUnit.MILLISECONDS).execute(() -> {
             client.execute(() -> {
+                // 恢复你原来的 grab 调用方式，只传 3 个参数
                 Screenshot.grab(client.gameDirectory, client.getMainRenderTarget(), (component) -> {
                     String fileName = extractFileName(component.getString());
                     if (fileName != null) {

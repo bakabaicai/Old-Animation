@@ -1,6 +1,8 @@
 package com.old_animation.mixin.client;
 
 import com.old_animation.AnimationConfig;
+import com.old_animation.LowHealthHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @Shadow public int swingTime;
+    @Shadow public abstract float getHealth();
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void checkLowHealth(CallbackInfo ci) {
+        Minecraft client = Minecraft.getInstance();
+        if ((Object) this == client.player) {
+            LowHealthHandler.onHealthUpdate(client, this.getHealth());
+        }
+    }
 
     @Inject(method = "getCurrentSwingDuration", at = @At("RETURN"), cancellable = true)
     private void modifySwingDuration(CallbackInfoReturnable<Integer> cir) {

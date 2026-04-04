@@ -8,6 +8,8 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.old_animation.client.gui.NotificationOverlay;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class OldAnimationClient implements ClientModInitializer {
     @Override
@@ -38,11 +40,37 @@ public class OldAnimationClient implements ClientModInitializer {
                     .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
                             .executes(context -> {
                                 String text = StringArgumentType.getString(context, "text");
-                                NotificationOverlay.getInstance().show(text);
+                                NotificationOverlay.getInstance().show(text, 0xFFFFFF, new ItemStack(Items.GOLDEN_APPLE));
                                 return 1;
                             }))
                     .executes(context -> {
-                        NotificationOverlay.getInstance().show("Default Test Message");
+                        NotificationOverlay.getInstance().show("Icon Test Message", 0xFFFFFF, new ItemStack(Items.COMPASS));
+                        return 1;
+                    })
+            );
+
+            dispatcher.register(ClientCommandManager.literal("test2")
+                    .then(ClientCommandManager.literal("start")
+                            .executes(context -> {
+                                NotificationOverlay.getInstance().showPersistent("Text Message", 0xFF5555, new ItemStack(Items.NETHERITE_SWORD));
+                                return 1;
+                            }))
+                    .then(ClientCommandManager.literal("stop")
+                            .executes(context -> {
+                                NotificationOverlay.getInstance().stopPersistent(1000);
+                                return 1;
+                            }))
+            );
+
+            dispatcher.register(ClientCommandManager.literal("test3")
+                    .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
+                            .executes(context -> {
+                                String text = StringArgumentType.getString(context, "text");
+                                NotificationOverlay.getInstance().show(text, 0xFFFFFF);
+                                return 1;
+                            }))
+                    .executes(context -> {
+                        NotificationOverlay.getInstance().show("Text Message", 0xFFFFFF);
                         return 1;
                     })
             );

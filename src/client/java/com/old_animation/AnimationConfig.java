@@ -13,7 +13,8 @@ public class AnimationConfig {
     public static boolean autoScreenshot = false;
     public static boolean hitMarker = false;
     public static boolean hitSound = true;
-    public static boolean damageRecord = true;
+    public static boolean damageRecord = false;
+    public static boolean lowHealthNotify = false;
     public static HitSoundType hitSoundType = HitSoundType.NETHERITE;
     public static HitSoundCondition hitSoundCondition = HitSoundCondition.BOTH;
     public static double range = 3.0;
@@ -31,10 +32,7 @@ public class AnimationConfig {
     private static final Path CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("old_animation.properties");
 
     public static void load() {
-        if (!CONFIG_FILE.toFile().exists()) {
-            save();
-            return;
-        }
+        if (!CONFIG_FILE.toFile().exists()) return;
         try (InputStream is = new FileInputStream(CONFIG_FILE.toFile())) {
             Properties prop = new Properties();
             prop.load(is);
@@ -45,27 +43,16 @@ public class AnimationConfig {
             autoScreenshot = Boolean.parseBoolean(prop.getProperty("autoScreenshot", "false"));
             hitMarker = Boolean.parseBoolean(prop.getProperty("hitMarker", "false"));
             hitSound = Boolean.parseBoolean(prop.getProperty("hitSound", "true"));
-            damageRecord = Boolean.parseBoolean(prop.getProperty("damageRecord", "false"));
-            try {
-                hitSoundType = HitSoundType.valueOf(prop.getProperty("hitSoundType", "NETHERITE"));
-            } catch (Exception e) {
-                hitSoundType = HitSoundType.NETHERITE;
-            }
-            try {
-                hitSoundCondition = HitSoundCondition.valueOf(prop.getProperty("hitSoundCondition", "BOTH"));
-            } catch (Exception e) {
-                hitSoundCondition = HitSoundCondition.BOTH;
-            }
+            damageRecord = Boolean.parseBoolean(prop.getProperty("damageRecord", "true"));
+            lowHealthNotify = Boolean.parseBoolean(prop.getProperty("lowHealthNotify", "true"));
+            hitSoundType = HitSoundType.valueOf(prop.getProperty("hitSoundType", "NETHERITE"));
+            hitSoundCondition = HitSoundCondition.valueOf(prop.getProperty("hitSoundCondition", "BOTH"));
             range = Double.parseDouble(prop.getProperty("range", "3.0"));
             animSpeed = Float.parseFloat(prop.getProperty("animSpeed", "1.0"));
+            animationMode = AnimMode.valueOf(prop.getProperty("animationMode", "MODE_1_7"));
             offsetX = Float.parseFloat(prop.getProperty("offsetX", "0.0"));
             offsetY = Float.parseFloat(prop.getProperty("offsetY", "0.0"));
             offsetZ = Float.parseFloat(prop.getProperty("offsetZ", "0.0"));
-            try {
-                animationMode = AnimMode.valueOf(prop.getProperty("animationMode", "MODE_1_7"));
-            } catch (IllegalArgumentException e) {
-                animationMode = AnimMode.MODE_1_7;
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,6 +69,7 @@ public class AnimationConfig {
             prop.setProperty("hitMarker", String.valueOf(hitMarker));
             prop.setProperty("hitSound", String.valueOf(hitSound));
             prop.setProperty("damageRecord", String.valueOf(damageRecord));
+            prop.setProperty("lowHealthNotify", String.valueOf(lowHealthNotify));
             prop.setProperty("hitSoundType", hitSoundType.name());
             prop.setProperty("hitSoundCondition", hitSoundCondition.name());
             prop.setProperty("range", String.valueOf(range));

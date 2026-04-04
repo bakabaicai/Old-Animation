@@ -40,6 +40,7 @@ public class AnimationSettingsScreen extends Screen {
                 Component.literal(cn ? "动画设置" : "Animation Settings"),
                 (button) -> {
                     inAnimPage = true;
+                    inOtherPage = false;
                     this.init();
                 }).bounds(centerX - 155, centerY - 20, 150, 40).build());
 
@@ -47,6 +48,7 @@ public class AnimationSettingsScreen extends Screen {
                 Component.literal(cn ? "其他功能" : "Other Features"),
                 (button) -> {
                     inOtherPage = true;
+                    inAnimPage = false;
                     this.init();
                 }).bounds(centerX + 5, centerY - 20, 150, 40).build());
 
@@ -65,6 +67,7 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.hitMarker = false;
                     AnimationConfig.hitSound = true;
                     AnimationConfig.damageRecord = true;
+                    AnimationConfig.lowHealthNotify = true;
                     AnimationConfig.hitSoundType = AnimationConfig.HitSoundType.NETHERITE;
                     AnimationConfig.hitSoundCondition = AnimationConfig.HitSoundCondition.BOTH;
                     AnimationConfig.animationMode = AnimationConfig.AnimMode.MODE_1_7;
@@ -171,6 +174,7 @@ public class AnimationSettingsScreen extends Screen {
 
         this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
             inAnimPage = false;
+            inOtherPage = false;
             this.init();
         }).bounds(centerX - 75, centerY + 65, 150, 20).build());
     }
@@ -187,6 +191,15 @@ public class AnimationSettingsScreen extends Screen {
                 (button) -> {
                     AnimationConfig.autoScreenshot = !AnimationConfig.autoScreenshot;
                     button.setMessage(Component.literal(getToggleText(cn ? "自动截图" : "Auto Screenshot", AnimationConfig.autoScreenshot, cn)));
+                    AnimationConfig.save();
+                }).bounds(centerX - 75, currentY, 150, 20).build());
+
+        currentY += 25;
+        this.addRenderableWidget(Button.builder(
+                Component.literal(getToggleText(cn ? "低血量提示" : "Low Health Warning", AnimationConfig.lowHealthNotify, cn)),
+                (button) -> {
+                    AnimationConfig.lowHealthNotify = !AnimationConfig.lowHealthNotify;
+                    button.setMessage(Component.literal(getToggleText(cn ? "低血量提示" : "Low Health Warning", AnimationConfig.lowHealthNotify, cn)));
                     AnimationConfig.save();
                 }).bounds(centerX - 75, currentY, 150, 20).build());
 
@@ -253,8 +266,9 @@ public class AnimationSettingsScreen extends Screen {
 
         this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
             inOtherPage = false;
+            inAnimPage = false;
             this.init();
-        }).bounds(centerX - 75, centerY + 65, 150, 20).build());
+        }).bounds(centerX - 75, centerY + 100, 150, 20).build());
     }
 
     private String getToggleText(String prefix, boolean value, boolean isChinese) {
