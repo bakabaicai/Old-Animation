@@ -7,7 +7,8 @@
     "AbstractContainerScreenMixin",
     "LivingEntityMixin",
     "LocalPlayerMixin",
-    "GuiMixin"
+    "GuiMixin",
+    "ClientPacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

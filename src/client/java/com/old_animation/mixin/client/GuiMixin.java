@@ -2,6 +2,7 @@ package com.old_animation.mixin.client;
 
 import com.old_animation.TitleDetector;
 import com.old_animation.client.gui.NotificationOverlay;
+import com.old_animation.client.gui.HitMarkerRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
@@ -27,5 +28,6 @@ public class GuiMixin {
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         NotificationOverlay.getInstance().render(guiGraphics);
+        HitMarkerRenderer.getInstance().render(guiGraphics);
     }
 }

@@ -51,7 +51,7 @@ public class AnimationSettingsScreen extends Screen {
                 }).bounds(centerX + 5, centerY - 20, 150, 40).build());
 
         this.addRenderableWidget(Button.builder(
-                Component.literal(cn ? "\u00A7c重置所有设置" : "\u00A7cReset All Settings"),
+                Component.literal(cn ? "§c重置所有设置" : "§cReset All Settings"),
                 (button) -> {
                     AnimationConfig.offsetX = 0.0f;
                     AnimationConfig.offsetY = 0.0f;
@@ -62,13 +62,18 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.useSwing = false;
                     AnimationConfig.autoMode = false;
                     AnimationConfig.autoScreenshot = false;
+                    AnimationConfig.hitMarker = false;
+                    AnimationConfig.hitSound = true;
+                    AnimationConfig.damageRecord = true;
+                    AnimationConfig.hitSoundType = AnimationConfig.HitSoundType.NETHERITE;
+                    AnimationConfig.hitSoundCondition = AnimationConfig.HitSoundCondition.BOTH;
                     AnimationConfig.animationMode = AnimationConfig.AnimMode.MODE_1_7;
                     AnimationConfig.save();
                     if (this.minecraft != null) this.minecraft.setScreen(new AnimationSettingsScreen(this.lastScreen));
                 }).bounds(5, this.height - 75, 90, 20).build());
 
         this.addRenderableWidget(Button.builder(
-                Component.literal(cn ? "\u00A7a作者主页" : "\u00A7aAuthor"),
+                Component.literal(cn ? "§a作者主页" : "§aAuthor"),
                 (button) -> {
                     if (this.minecraft != null) {
                         String url = "https://space.bilibili.com/3546915648047958";
@@ -175,13 +180,76 @@ public class AnimationSettingsScreen extends Screen {
         int centerY = this.height / 2;
         boolean cn = AnimationConfig.isChinese;
 
+        int currentY = centerY - 85;
+
         this.addRenderableWidget(Button.builder(
                 Component.literal(getToggleText(cn ? "自动截图" : "Auto Screenshot", AnimationConfig.autoScreenshot, cn)),
                 (button) -> {
                     AnimationConfig.autoScreenshot = !AnimationConfig.autoScreenshot;
                     button.setMessage(Component.literal(getToggleText(cn ? "自动截图" : "Auto Screenshot", AnimationConfig.autoScreenshot, cn)));
                     AnimationConfig.save();
-                }).bounds(centerX - 75, centerY - 10, 150, 20).build());
+                }).bounds(centerX - 75, currentY, 150, 20).build());
+
+        currentY += 25;
+        this.addRenderableWidget(Button.builder(
+                Component.literal(getToggleText(cn ? "击中标记" : "Hit Marker", AnimationConfig.hitMarker, cn)),
+                (button) -> {
+                    AnimationConfig.hitMarker = !AnimationConfig.hitMarker;
+                    AnimationConfig.save();
+                    this.init();
+                }).bounds(centerX - 75, currentY, 150, 20).build());
+
+        currentY += 25;
+        this.addRenderableWidget(Button.builder(
+                Component.literal(getToggleText(cn ? "伤害数值记录" : "Damage Record", AnimationConfig.damageRecord, cn)),
+                (button) -> {
+                    AnimationConfig.damageRecord = !AnimationConfig.damageRecord;
+                    button.setMessage(Component.literal(getToggleText(cn ? "伤害数值记录" : "Damage Record", AnimationConfig.damageRecord, cn)));
+                    AnimationConfig.save();
+                }).bounds(centerX - 75, currentY, 150, 20).build());
+
+        if (AnimationConfig.hitMarker) {
+            currentY += 25;
+            this.addRenderableWidget(Button.builder(
+                    Component.literal(getToggleText(cn ? "命中提示音" : "Hit Sound", AnimationConfig.hitSound, cn)),
+                    (button) -> {
+                        AnimationConfig.hitSound = !AnimationConfig.hitSound;
+                        AnimationConfig.save();
+                        this.init();
+                    }).bounds(centerX - 75, currentY, 150, 20).build());
+
+            if (AnimationConfig.hitSound) {
+                currentY += 25;
+                String typeName = AnimationConfig.hitSoundType == AnimationConfig.HitSoundType.NETHERITE ?
+                        (cn ? "下界合金块" : "Netherite Block") : (cn ? "经验声" : "Experience");
+                this.addRenderableWidget(Button.builder(
+                        Component.literal((cn ? "提示音: " : "Sound: ") + typeName),
+                        (button) -> {
+                            AnimationConfig.hitSoundType = AnimationConfig.hitSoundType == AnimationConfig.HitSoundType.NETHERITE ?
+                                    AnimationConfig.HitSoundType.EXPERIENCE : AnimationConfig.HitSoundType.NETHERITE;
+                            AnimationConfig.save();
+                            this.init();
+                        }).bounds(centerX - 75, currentY, 150, 20).build());
+
+                currentY += 25;
+                String conditionName = switch (AnimationConfig.hitSoundCondition) {
+                    case BOTH -> cn ? "近战、远程命中" : "Melee & Ranged";
+                    case MELEE -> cn ? "近战命中" : "Melee Only";
+                    case RANGED -> cn ? "远程命中" : "Ranged Only";
+                };
+                this.addRenderableWidget(Button.builder(
+                        Component.literal((cn ? "提示音播放时机: " : "Play On: ") + conditionName),
+                        (button) -> {
+                            AnimationConfig.hitSoundCondition = switch (AnimationConfig.hitSoundCondition) {
+                                case BOTH -> AnimationConfig.HitSoundCondition.MELEE;
+                                case MELEE -> AnimationConfig.HitSoundCondition.RANGED;
+                                case RANGED -> AnimationConfig.HitSoundCondition.BOTH;
+                            };
+                            AnimationConfig.save();
+                            this.init();
+                        }).bounds(centerX - 75, currentY, 150, 20).build());
+            }
+        }
 
         this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
             inOtherPage = false;
