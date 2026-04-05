@@ -15,6 +15,7 @@ repositories {
     maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
     maven { url = "https://maven.terraformersmc.com/releases/" }
     maven { url = "https://jitpack.io" }
+    maven { url = "https://maven.pkg.jetbrains.space/public/p/skiko/public" }
 }
 
 loom {
@@ -41,6 +42,10 @@ dependencies {
 
     implementation "io.github.llamalad7:mixinextras-fabric:0.4.1"
     annotationProcessor "io.github.llamalad7:mixinextras-common:0.4.1"
+
+    implementation "org.jetbrains.skiko:skiko-awt:0.8.9"
+
+    runtimeOnly "org.jetbrains.skiko:skiko-awt-runtime-windows-x64:0.8.9"
 }
 
 processResources {
@@ -57,12 +62,13 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     withSourcesJar()
+
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archives_base_name}"}
+        rename { "${it}_${project.archives_base_name}" }
     }
 }

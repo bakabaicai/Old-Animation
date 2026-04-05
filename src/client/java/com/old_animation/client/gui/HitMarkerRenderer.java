@@ -9,14 +9,16 @@ public class HitMarkerRenderer {
     private static final HitMarkerRenderer INSTANCE = new HitMarkerRenderer();
     private long hitTime = 0;
     private static final long DURATION = 250;
+    private int currentColor = 0xFFFFFF;
 
     public static HitMarkerRenderer getInstance() {
         return INSTANCE;
     }
 
-    public void onHit(boolean isRanged) {
+    public void onHit(boolean isRanged, int color) {
         if (AnimationConfig.hitMarker) {
             this.hitTime = System.currentTimeMillis();
+            this.currentColor = color;
 
             if (AnimationConfig.hitSound) {
                 boolean shouldPlay = false;
@@ -32,7 +34,7 @@ public class HitMarkerRenderer {
                     Minecraft client = Minecraft.getInstance();
                     if (client.player != null) {
                         if (AnimationConfig.hitSoundType == AnimationConfig.HitSoundType.NETHERITE) {
-                            client.player.playSound(SoundEvents.NETHERITE_BLOCK_HIT, 1.0F, 0.9F);
+                            client.player.playSound(SoundEvents.PLAYER_ATTACK_CRIT, 1.0F, 1.0F);
                         } else {
                             client.player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F, 0.5F);
                         }
@@ -53,7 +55,7 @@ public class HitMarkerRenderer {
 
         float alphaProgress = 1.0f - (float) elapsed / DURATION;
         int alpha = (int) (alphaProgress * 255);
-        int color = (alpha << 24) | 0xFFFFFF;
+        int color = (alpha << 24) | (currentColor & 0xFFFFFF);
 
         Minecraft client = Minecraft.getInstance();
         int centerX = client.getWindow().getGuiScaledWidth() / 2;
@@ -70,7 +72,7 @@ public class HitMarkerRenderer {
 
     private void drawDiagonal(GuiGraphics graphics, int x, int y, int dx, int dy, int len, int color) {
         for (int i = 0; i < len; i++) {
-            graphics.fill(x + (i * dx), y + (i * dy), x + (i * dx) + 1, y + (i * dy) + 1, color);
+            graphics.fill(x + i * dx, y + i * dy, x + i * dx + 1, y + i * dy + 1, color);
         }
     }
 }

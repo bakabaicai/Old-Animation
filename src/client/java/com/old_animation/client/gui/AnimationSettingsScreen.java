@@ -13,6 +13,7 @@ public class AnimationSettingsScreen extends Screen {
     private final Screen lastScreen;
     private boolean inAnimPage = false;
     private boolean inOtherPage = false;
+    private boolean inHitMarkerPage = false;
 
     public AnimationSettingsScreen(Screen lastScreen) {
         super(Component.literal(AnimationConfig.isChinese ? "OldAnimation 设置" : "OldAnimation Settings"));
@@ -24,6 +25,8 @@ public class AnimationSettingsScreen extends Screen {
         this.clearWidgets();
         if (inAnimPage) {
             initAnimPage();
+        } else if (inHitMarkerPage) {
+            initHitMarkerPage();
         } else if (inOtherPage) {
             initOtherPage();
         } else {
@@ -205,10 +208,10 @@ public class AnimationSettingsScreen extends Screen {
 
         currentY += 25;
         this.addRenderableWidget(Button.builder(
-                Component.literal(getToggleText(cn ? "击中标记" : "Hit Marker", AnimationConfig.hitMarker, cn)),
+                Component.literal(cn ? "击中标记..." : "Hit Marker..."),
                 (button) -> {
-                    AnimationConfig.hitMarker = !AnimationConfig.hitMarker;
-                    AnimationConfig.save();
+                    inHitMarkerPage = true;
+                    inOtherPage = false;
                     this.init();
                 }).bounds(centerX - 75, currentY, 150, 20).build());
 
@@ -219,6 +222,28 @@ public class AnimationSettingsScreen extends Screen {
                     AnimationConfig.damageRecord = !AnimationConfig.damageRecord;
                     button.setMessage(Component.literal(getToggleText(cn ? "伤害数值记录" : "Damage Record", AnimationConfig.damageRecord, cn)));
                     AnimationConfig.save();
+                }).bounds(centerX - 75, currentY, 150, 20).build());
+
+        this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
+            inOtherPage = false;
+            inAnimPage = false;
+            this.init();
+        }).bounds(centerX - 75, centerY + 100, 150, 20).build());
+    }
+
+    private void initHitMarkerPage() {
+        int centerX = this.width / 2;
+        int centerY = this.height / 2;
+        boolean cn = AnimationConfig.isChinese;
+
+        int currentY = centerY - 85;
+
+        this.addRenderableWidget(Button.builder(
+                Component.literal(getToggleText(cn ? "击中标记" : "Hit Marker", AnimationConfig.hitMarker, cn)),
+                (button) -> {
+                    AnimationConfig.hitMarker = !AnimationConfig.hitMarker;
+                    AnimationConfig.save();
+                    this.init();
                 }).bounds(centerX - 75, currentY, 150, 20).build());
 
         if (AnimationConfig.hitMarker) {
@@ -265,8 +290,8 @@ public class AnimationSettingsScreen extends Screen {
         }
 
         this.addRenderableWidget(Button.builder(Component.literal(cn ? "返回" : "Back"), (button) -> {
-            inOtherPage = false;
-            inAnimPage = false;
+            inHitMarkerPage = false;
+            inOtherPage = true;
             this.init();
         }).bounds(centerX - 75, centerY + 100, 150, 20).build());
     }

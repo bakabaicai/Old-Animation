@@ -23,11 +23,26 @@ public class ClientPacketListenerMixin {
             if (target instanceof LivingEntity && packet.sourceCauseId() == client.player.getId()) {
                 Entity source = client.level.getEntity(packet.sourceDirectId());
                 boolean isRanged = source instanceof Projectile;
-                float attackStrength = client.player.getAttackStrengthScale(0.5f);
-                float fakeDamage = 2.0f + (attackStrength * 7.0f);
+
+                boolean isCrit = !isRanged &&
+                        client.player.fallDistance > 0.0f &&
+                        !client.player.onGround();
+
+                int colorValue = 0xFFFFFF;
+                if (isCrit) {
+                    colorValue = 0xFF0000;
+                } else if (isRanged) {
+                    colorValue = 0x00FF00;
+                }
+
+                final int finalColor = colorValue;
+                float cooldown = client.player.getAttackStrengthScale(0.5f);
+                final float baseDamage = 2.0f + (cooldown * 7.0f);
+                final float finalDamage = isCrit ? baseDamage * 1.5f : baseDamage;
+
                 client.execute(() -> {
-                    HitMarkerRenderer.getInstance().onHit(isRanged);
-                    DamageRecordHandler.showDamage(target, fakeDamage, isRanged);
+                    HitMarkerRenderer.getInstance().onHit(isRanged, finalColor);
+                    DamageRecordHandler.showDamage(target, finalDamage, isRanged);
                 });
             }
         }

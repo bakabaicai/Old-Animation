@@ -35,7 +35,7 @@ public abstract class LivingEntityMixin {
 
     @Inject(method = "swing(Lnet/minecraft/world/InteractionHand;Z)V", at = @At("HEAD"), cancellable = true)
     private void preventSwingReset(CallbackInfo ci) {
-        if ((Object) this instanceof Player && this.swingTime > 0) {
+        if ((Object) this instanceof Player && this.swingTime > 0 && AnimationConfig.animSpeed < 1.0f) {
             ci.cancel();
         }
     }
