@@ -15,6 +15,7 @@ public class PVPUtilsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Config.load();
+        VictorySound.init();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("oldanimation")

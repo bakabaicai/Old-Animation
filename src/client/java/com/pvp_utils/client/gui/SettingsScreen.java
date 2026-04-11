@@ -76,6 +76,7 @@ public class SettingsScreen extends Screen {
                     Config.lowHealthNotify = true;
                     Config.targetHud = false;
                     Config.fallDamagePredict = false;
+                    Config.victorySound = true;
                     Config.targetHudX = -300f;
                     Config.targetHudY = -100f;
                     Config.targetHudZ = 0f;
@@ -247,6 +248,15 @@ public class SettingsScreen extends Screen {
                 (button) -> {
                     Config.damageRecord = !Config.damageRecord;
                     button.setMessage(Component.literal(getToggleText(cn ? "伤害数值记录" : "Damage Record", Config.damageRecord, cn)));
+                    Config.save();
+                }).bounds(centerX - 75, currentY, 150, 20).build());
+
+        currentY += 25;
+        this.addRenderableWidget(Button.builder(
+                Component.literal(getToggleText(cn ? "胜利音效" : "Victory Sound", Config.victorySound, cn)),
+                (button) -> {
+                    Config.victorySound = !Config.victorySound;
+                    button.setMessage(Component.literal(getToggleText(cn ? "胜利音效" : "Victory Sound", Config.victorySound, cn)));
                     Config.save();
                 }).bounds(centerX - 75, currentY, 150, 20).build());
 

@@ -17,6 +17,7 @@ public class Config {
     public static boolean lowHealthNotify = false;
     public static boolean targetHud = false;
     public static boolean fallDamagePredict = false;
+    public static boolean victorySound = false;
     public static HitSoundType hitSoundType = HitSoundType.NETHERITE;
     public static HitSoundCondition hitSoundCondition = HitSoundCondition.BOTH;
     public static double range = 3.0;
@@ -24,20 +25,23 @@ public class Config {
     public static float targetHudX = -300f;
     public static float targetHudY = -100f;
     public static float targetHudZ = 0f;
+    public static float offsetX = 0f;
+    public static float offsetY = 0f;
+    public static float offsetZ = 0f;
 
     public enum AnimMode { MODE_1_7, MODE_PUSH, MODE_1_7_PLUS }
     public enum HitSoundType { NETHERITE, EXPERIENCE }
     public enum HitSoundCondition { BOTH, MELEE, RANGED }
 
     public static AnimMode animationMode = AnimMode.MODE_1_7;
-    public static float offsetX = 0.0f;
-    public static float offsetY = 0.0f;
-    public static float offsetZ = 0.0f;
 
     private static final Path CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("pvp_utils.properties");
 
     public static void load() {
-        if (!CONFIG_FILE.toFile().exists()) return;
+        if (!CONFIG_FILE.toFile().exists()) {
+            save();
+            return;
+        }
         try (InputStream is = new FileInputStream(CONFIG_FILE.toFile())) {
             Properties prop = new Properties();
             prop.load(is);
@@ -48,21 +52,22 @@ public class Config {
             autoScreenshot = Boolean.parseBoolean(prop.getProperty("autoScreenshot", "false"));
             hitMarker = Boolean.parseBoolean(prop.getProperty("hitMarker", "false"));
             hitSound = Boolean.parseBoolean(prop.getProperty("hitSound", "true"));
-            damageRecord = Boolean.parseBoolean(prop.getProperty("damageRecord", "true"));
-            lowHealthNotify = Boolean.parseBoolean(prop.getProperty("lowHealthNotify", "true"));
+            damageRecord = Boolean.parseBoolean(prop.getProperty("damageRecord", "false"));
+            lowHealthNotify = Boolean.parseBoolean(prop.getProperty("lowHealthNotify", "false"));
             targetHud = Boolean.parseBoolean(prop.getProperty("targetHud", "false"));
             fallDamagePredict = Boolean.parseBoolean(prop.getProperty("fallDamagePredict", "false"));
+            victorySound = Boolean.parseBoolean(prop.getProperty("victorySound", "false"));
             hitSoundType = HitSoundType.valueOf(prop.getProperty("hitSoundType", "NETHERITE"));
             hitSoundCondition = HitSoundCondition.valueOf(prop.getProperty("hitSoundCondition", "BOTH"));
             range = Double.parseDouble(prop.getProperty("range", "3.0"));
             animSpeed = Float.parseFloat(prop.getProperty("animSpeed", "1.0"));
             animationMode = AnimMode.valueOf(prop.getProperty("animationMode", "MODE_1_7"));
-            offsetX = Float.parseFloat(prop.getProperty("offsetX", "0.0"));
-            offsetY = Float.parseFloat(prop.getProperty("offsetY", "0.0"));
-            offsetZ = Float.parseFloat(prop.getProperty("offsetZ", "0.0"));
-            targetHudX = Float.parseFloat(prop.getProperty("targetHudX", "-300.0"));
-            targetHudY = Float.parseFloat(prop.getProperty("targetHudY", "-100.0"));
-            targetHudZ = Float.parseFloat(prop.getProperty("targetHudZ", "0.0"));
+            offsetX = Float.parseFloat(prop.getProperty("offsetX", "0"));
+            offsetY = Float.parseFloat(prop.getProperty("offsetY", "0"));
+            offsetZ = Float.parseFloat(prop.getProperty("offsetZ", "0"));
+            targetHudX = Float.parseFloat(prop.getProperty("targetHudX", "-300"));
+            targetHudY = Float.parseFloat(prop.getProperty("targetHudY", "-100"));
+            targetHudZ = Float.parseFloat(prop.getProperty("targetHudZ", "0"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -82,6 +87,7 @@ public class Config {
             prop.setProperty("lowHealthNotify", String.valueOf(lowHealthNotify));
             prop.setProperty("targetHud", String.valueOf(targetHud));
             prop.setProperty("fallDamagePredict", String.valueOf(fallDamagePredict));
+            prop.setProperty("victorySound", String.valueOf(victorySound));
             prop.setProperty("hitSoundType", hitSoundType.name());
             prop.setProperty("hitSoundCondition", hitSoundCondition.name());
             prop.setProperty("range", String.valueOf(range));

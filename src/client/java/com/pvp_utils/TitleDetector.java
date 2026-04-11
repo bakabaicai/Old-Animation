@@ -6,6 +6,7 @@ public class TitleDetector {
     public static void check(String title, String subtitle) {
         if (matches(title) || matches(subtitle)) {
             VictoryScreenshot.tryCapture();
+            VictorySound.play();
         }
     }
 
