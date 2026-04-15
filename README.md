@@ -26,7 +26,7 @@
 
 | 环境组件 | 版本要求 |
 | :--- | :--- |
-| **Minecraft** | `1.21.1` |
+| **Minecraft** | `1.21.11` |
 | **Fabric Loader** | `>= 0.16.0` |
 | **Java Runtime** | `Java 21+` |
 
