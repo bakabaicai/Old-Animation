@@ -1,3 +1,4 @@
+中文：
 # ⚔️ PVPUtils
 
 一款专为 Minecraft 1.21.11 打造的高性能 PVP 辅助工具类模组。
@@ -45,3 +46,48 @@
 如果你在开发或使用过程中遇到问题，欢迎提交 Issue 或 Pull Request。
 
 感谢你支持 PVPUtils！如果觉得好用，请给本项目点个 ⭐ Star。
+
+---
+
+English:
+# ⚔️ PVPUtils
+
+A high-performance PVP utility mod specifically crafted for Minecraft 1.21.11.
+
+---
+
+## ✨ Features
+
+### 🎮 Combat Feedback
+* **1.8 Sword Blocking Animation** > Visual effects only; perfectly restores the classic feel with multiple animation modes available for switching.
+* **Hit Markers** > Displays FPS-style hit feedback around your crosshair upon ranged or melee hits, with support for custom hit sounds.
+* **Target HUD** > Real-time display of the current opponent's health.  
+  > *Note: Only functions when the server broadcasts visible health data; please be aware that some servers may consider this a prohibited feature.*
+
+### ⚠️ Safety Alerts
+* **Fall Damage Prediction** > Provides alerts when you are about to take fall damage and warnings when the damage is lethal.
+* **Low Health Warning** > Triggers an eye-catching screen pop-up and sound notification when health drops below a set threshold to remind you to heal.
+
+### 🏆 Victory Moments
+* **Auto-Victory Screenshot** > Automatically captures a screenshot at the moment of victory and saves it to your desktop. Deeply optimized for mainstream servers like **Hypixel**, **MMC**, and **PVPclub**.
+* **Victory Sound Effects** > Plays your preset custom sound effects when you achieve victory.
+
+---
+
+## 🛠️ Requirements
+
+| Component | Requirement |
+| :--- | :--- |
+| **Minecraft** | `1.21.11` |
+| **Fabric Loader** | `>= 0.16.0` |
+| **Java Runtime** | `Java 21+` |
+
+---
+
+## 📜 License
+
+This project is open-sourced under the **GPL v3** license, with the following additional terms:
+
+1. **Non-Commercial Use Only**: It is strictly forbidden to use this software or its derivative works for commercial purposes (e.g., direct sales, inclusion in paid modpacks, etc.).
+2. **Attribution Requirement**: The original author must be clearly credited when distributing, modifying, or showcasing this mod.
+3. **Detailed Terms**: Please refer to the [LICENSE](./LICENSE) file in the project for the full text.
